@@ -17,6 +17,8 @@ public class Model extends Observable {
     /** True iff game is ended. */
     private boolean gameOver;
 
+    private boolean changed;
+
     /* Coordinate System: column C, row R of the board (where row 0,
      * column 0 is the lower-left corner of the board) will correspond
      * to board.tile(c, r).  Be careful! It works like (x, y) coordinates.
@@ -102,6 +104,10 @@ public class Model extends Observable {
             if (board.tile(i, j) != null) {
                 Tile t = board.tile(i, j);
                 board.move(i, k, t);
+
+                if (j != k) {
+                    changed = true;
+                }
                 k--;
             }
         }
@@ -118,10 +124,11 @@ public class Model extends Observable {
             Tile t = board.tile(i, 2);
             board.move(i, 3, t);
             score += board.tile(i, 3).value();
+            changed = true;
 
             Upcolumn(i);
 
-            if (board.tile(i, 0) == null) {
+            if (board.tile(i, 1) == null) {
                 return;
             }
             if (board.tile(i, 1).value() == board.tile(i, 2).value()) {
@@ -139,6 +146,8 @@ public class Model extends Observable {
             Tile t = board.tile(i, 1);
             board.move(i, 2, t);
             score += board.tile(i, 2).value();
+            changed = true;
+
             Upcolumn(i);
         }
 
@@ -150,6 +159,8 @@ public class Model extends Observable {
             Tile t = board.tile(i, 0);
             board.move(i, 1, t);
             score += board.tile(i, 1).value();
+            changed = true;
+
             Upcolumn(i);
         }
     }
@@ -167,8 +178,10 @@ public class Model extends Observable {
      *    and the trailing tile does not.
      * */
     public boolean tilt(Side side) {
-        boolean changed;
+
         changed = false;
+
+        Board b = board;
 
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
@@ -180,8 +193,6 @@ public class Model extends Observable {
         }
 
         board.setViewingPerspective(Side.NORTH);
-
-        changed = true;
 
         checkGameOver();
         if (changed) {
