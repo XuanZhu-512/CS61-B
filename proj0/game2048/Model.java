@@ -102,6 +102,10 @@ public class Model extends Observable {
             if (board.tile(i, j) != null) {
                 Tile t = board.tile(i, j);
                 board.move(i, k, t);
+
+                if (j != k) {
+                    changed = true;
+                }
                 k--;
             }
         }
@@ -121,7 +125,7 @@ public class Model extends Observable {
 
             Upcolumn(i);
 
-            if (board.tile(i, 0) == null) {
+            if (board.tile(i, 1) == null) {
                 return;
             }
             if (board.tile(i, 1).value() == board.tile(i, 2).value()) {
