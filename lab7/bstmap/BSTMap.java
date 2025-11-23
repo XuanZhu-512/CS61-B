@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
+public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     private BSTNode root;
     private int size;
 
@@ -102,5 +102,16 @@ public class BSTMap<K extends Comparable, V> implements Map61B<K, V> {
     @Override
     public Iterator<K> iterator() {
         throw new UnsupportedOperationException();
+    }
+
+    private void printInOrder(BSTNode node) {
+        if (node == null) return;
+        printInOrder(node.left);
+        System.out.println(node.key);
+        printInOrder(node.right);
+    }
+
+    public void printInOrder() {
+    printInOrder(root);
     }
 }
